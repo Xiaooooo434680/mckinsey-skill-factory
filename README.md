@@ -1,6 +1,20 @@
-# McKinsey Skill Factory
+<div align="center">
 
-一个平台无关、可运行的工程级 Meta Skill 系统。项目将“创建新 Skill”和“修改已有 Skill”分成两个独立子系统：
+# 🏭 McKinsey Skill Factory
+
+> 用结构化问题定义（MECE 问题树、关键假设、能力架构）创建与演进工程级 Skill
+
+**v0.2.0** · Python ≥ 3.10
+
+[![CI](https://img.shields.io/github/actions/workflow/status/Xiaooooo434680/mckinsey-skill-factory/ci.yml?style=flat&color=0080ff)](https://github.com/Xiaooooo434680/mckinsey-skill-factory/actions)
+[![Python](https://img.shields.io/badge/python-3.10%2B-0080ff?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![GitHub repo size](https://img.shields.io/github/repo-size/Xiaooooo434680/mckinsey-skill-factory?style=flat&color=0080ff)](https://github.com/Xiaooooo434680/mckinsey-skill-factory)
+
+</div>
+
+---
+
+一个平台无关、可运行的工程级 **Meta Skill** 系统，把“创建新 Skill”和“修改已有 Skill”拆成两个独立子系统：
 
 - **SkillFactory**：从业务需求创建全新的工程级 Skill。
 - **SkillEvolver**：检查已有 Skill，生成可追踪、可测试、可回滚的新版本。
@@ -10,32 +24,93 @@ Create: SkillRequest → SkillFactory → SkillSpec → Skill Package
 Evolve: Existing Package + ChangeRequest → SkillEvolver → Versioned Package
 ```
 
-## 核心能力
+## ✨ 功能特性
 
-- YAML DSL、Pydantic 校验和 JSON Schema
-- 麦肯锡式问题定义、MECE 问题树、关键假设和能力架构
-- Workflow、Tool Contract、Guardrails、Output Schema 和 Evaluation 自动生成
-- 结构化 Skill 修改，不直接覆盖基线版本
-- 影响分析、Owner 审批门禁、语义化版本升级
-- Package Diff、回归检查、迁移计划、Changelog 和 Rollback Archive
-- CLI、Pytest、Ruff、Mypy 和 GitHub Actions
+| 类别 | 能力 |
+| --- | --- |
+| 规范定义 | YAML DSL、Pydantic 校验、JSON Schema 自动导出 |
+| 问题分析 | 麦肯锡式问题定义、MECE 问题树、关键假设、能力架构 |
+| 产物生成 | Workflow、Tool Contract、Guardrails、Output Schema、Evaluation 自动生成 |
+| 演进修改 | 结构化修改不直接覆盖基线，按变更类型做语义化版本升级 |
+| 变更控制 | 影响分析、Owner 审批门禁、Package Diff、回归检查、迁移计划 |
+| 可追溯 | Changelog、Rollback Archive、.evolution 审计目录 |
+| 工程质量 | CLI、Pytest、Ruff、Mypy、GitHub Actions CI |
 
-## 快速开始
+## 📁 目录结构
+
+```text
+mckinsey-skill-factory/
+├── .github/
+│   └── workflows/ci.yml          # CI：lint + typecheck + test + 端到端示例
+├── config/
+│   └── defaults.yaml              # 编译流水线默认配置
+├── docs/
+│   ├── architecture.md            # 系统架构
+│   ├── evolution.md               # SkillEvolver 设计
+│   └── extension-guide.md         # 扩展指南
+├── examples/
+│   ├── evolution/                 # 演进 ChangeRequest 示例
+│   └── sales-opportunity/         # 创建 SkillRequest 示例
+├── schemas/
+│   ├── skill-request.schema.json  # 请求 DSL JSON Schema
+│   ├── change-request.schema.json # 变更 DSL JSON Schema
+│   └── README.md
+├── src/
+│   └── mckinsey_skill_factory/
+│       ├── evolver/               # SkillEvolver 子系统（inspect/modify/diff/test/rollback）
+│       ├── templates/             # Skill 包 Jinja2 模板
+│       ├── cli.py                 # skill-factory 命令入口
+│       ├── generator.py           # Skill 包生成器
+│       ├── models.py              # SkillRequest / SkillSpec Pydantic 模型
+│       ├── pipeline.py            # SkillFactory 编译流水线
+│       ├── quality.py             # 质量门禁
+│       └── stages.py              # 流水线阶段
+├── tests/
+│   ├── test_evolver.py
+│   ├── test_models.py
+│   ├── test_pipeline.py
+│   └── test_quality.py
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── Makefile
+├── README.md
+├── SECURITY.md
+└── pyproject.toml
+```
+
+## 🚀 快速开始
+
+**环境要求**
+
+- Python ≥ 3.10
+- 依赖：`pydantic >=2.7,<3` · `PyYAML >=6,<7` · `Jinja2 >=3.1,<4` · `typer >=0.12,<1`
+
+**安装**
 
 ```bash
+git clone https://github.com/Xiaooooo434680/mckinsey-skill-factory.git
+cd mckinsey-skill-factory
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -e '.[dev]'
 ```
 
-创建 Skill：
+验证安装：
+
+```bash
+skill-factory --help
+```
+
+## 📖 使用
+
+**创建 Skill** —— 从 `SkillRequest`（`examples/sales-opportunity/request.yaml`）编译出完整 Skill 包并验证：
 
 ```bash
 skill-factory build examples/sales-opportunity/request.yaml --output dist/base
 skill-factory validate dist/base/sales-opportunity-diagnosis
 ```
 
-演进 Skill：
+**演进 Skill** —— 检查基线、用 `ChangeRequest` 生成新版本、diff 并回归测试：
 
 ```bash
 skill-factory inspect dist/base/sales-opportunity-diagnosis
@@ -55,7 +130,7 @@ skill-factory test \
   --change-request examples/evolution/change-request.yaml
 ```
 
-回滚：
+**回滚** —— 从演进产物自带的 Rollback Archive 恢复基线版本：
 
 ```bash
 skill-factory rollback \
@@ -63,56 +138,39 @@ skill-factory rollback \
   --output dist/restored
 ```
 
-## 创建产物
+**修改模式与版本升级**
 
-```text
-<skill>/
-├── README.md
-├── SKILL.md
-├── skill.yaml
-├── skill.spec.json
-├── workflow.yaml
-├── tools.yaml
-├── guardrails.yaml
-├── output.schema.json
-├── policies.md
-├── assumptions.yaml
-├── release-gate.yaml
-├── evals/
-└── examples/
+| 模式 | 说明 | 默认版本 |
+| --- | --- | --- |
+| `corrective` | 修复缺陷 | patch |
+| `perfective` | 改善质量、成本或延迟 | patch |
+| `adaptive` | 适配新工具或业务环境 | minor |
+| `evolutionary` | 改变能力边界或契约 | major |
+
+高影响修改（删除组件、修改输入输出或输出契约、直接替换文件）必须设置 `owner_approval: true`。
+
+## 🧪 测试与质量
+
+```bash
+make test        # pytest -q
+make lint        # ruff check src tests
+make typecheck   # mypy src
+make build-example
+make evolve-example
 ```
 
-## 演进产物
+CI（`.github/workflows/ci.yml`）对每次 push / PR 依次执行 `ruff check`、`mypy src`、`pytest -q`，并跑一遍完整创建→验证→演进→回归的端到端示例。
 
-```text
-<skill>-<new-version>/
-├── .evolution/
-│   ├── change-request.yaml
-│   ├── impact-report.md
-│   ├── migration-plan.md
-│   ├── package-diff.md
-│   ├── regression-results.json
-│   └── manifest.json
-├── rollback/<skill>-<old-version>.zip
-├── CHANGELOG.md
-└── ...完整 Skill Package
-```
+## 🤝 社区与支持
 
-## 修改模式
+- **文档**：`docs/architecture.md`（架构）、`docs/evolution.md`（演进设计）、`docs/extension-guide.md`（扩展）
+- **问题反馈**：[GitHub Issues](https://github.com/Xiaooooo434680/mckinsey-skill-factory/issues)
+- **安全漏洞**：见 [`SECURITY.md`](SECURITY.md)
 
-- `corrective`：修复缺陷，默认升级 patch
-- `perfective`：改善质量、成本或延迟，默认升级 patch
-- `adaptive`：适配新工具或业务环境，默认升级 minor
-- `evolutionary`：改变能力边界或契约，默认升级 major
+## 🙋 贡献
 
-高影响修改必须设置 `owner_approval: true`。删除组件、修改输入输出或输出契约、直接替换文件，都可能触发高影响门禁。
+欢迎提交 Issue 和 Pull Request。请先阅读 [`CONTRIBUTING.md`](CONTRIBUTING.md)，开发流程为 `make lint` → `make typecheck` → `make test` 全绿后再提交。
 
-## 工程边界
+## 📄 License
 
-本仓库负责规范、编译、演进、验证和发布制品，不负责真实工具执行、凭证存储、用户鉴权、分布式状态或生产审计存储。这些能力应由宿主 Agent Runtime 提供。
-
-详见：
-
-- `docs/architecture.md`
-- `docs/evolution.md`
-- `docs/extension-guide.md`
+本仓库**尚未声明 License**（`pyproject.toml` 无 `license` 字段，仓库无 `LICENSE` 文件）。在补充 License 之前，代码默认保留所有权利，请在对外使用前与维护者确认。
