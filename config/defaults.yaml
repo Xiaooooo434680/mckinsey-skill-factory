@@ -1,0 +1,10 @@
+output_language: zh-CN
+risk_level: medium
+workflow_mode: branching
+tool_access: read-only
+write_action: human-approval-required
+confidence_required: 0.75
+observability: enabled
+versioning: semantic-versioning
+eval_required: true
+rollback_required: true

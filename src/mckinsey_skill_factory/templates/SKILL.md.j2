@@ -1,0 +1,63 @@
+---
+name: {{ spec.name }}
+version: {{ spec.version }}
+owner: {{ spec.owner }}
+risk_level: {{ spec.risk_level.value }}
+readiness: {{ spec.readiness.value }}
+---
+
+# {{ spec.name }}
+
+## Mission
+
+为 {{ spec.target_user }} 在“{{ spec.trigger }}”场景下，完成：{{ spec.purpose }}。
+
+## Answer Structure
+
+始终按以下顺序输出：
+
+1. 结论或建议
+2. 三至五个核心理由
+3. 证据和未验证假设
+4. 风险与约束
+5. 下一步动作
+
+## Mandatory Workflow
+
+{% for step in spec.workflow %}
+### {{ step.step_id }} — {{ step.name }}
+
+目标：{{ step.objective }}
+
+执行：{{ step.action }}
+{% if step.tool %}
+工具：`{{ step.tool }}`
+{% endif %}
+
+失败处理：{{ step.fallback }}
+{% if step.approval_required %}
+审批：必须人工审批。
+{% endif %}
+{% endfor %}
+
+## Guardrails
+
+{% for item in spec.guardrails %}
+- {{ item }}
+{% endfor %}
+
+## Output Contract
+
+输出必须符合 `output.schema.json`。不得增加未定义的顶级字段。
+
+## Confidence Policy
+
+- `0.80–1.00`：证据充分，可直接建议。
+- `0.50–0.79`：证据不完整，标记 partial 并列出缺口。
+- `<0.50`：不得给确定性结论，返回 blocked 或请求人工判断。
+
+## Out of Scope
+
+{% for item in spec.problem_definition.non_scope %}
+- {{ item }}
+{% endfor %}

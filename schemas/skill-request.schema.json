@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "RiskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "RiskLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "minLength": 3,
+      "pattern": "^[a-z0-9][a-z0-9-]+$",
+      "title": "Name",
+      "type": "string"
+    },
+    "business_problem": {
+      "minLength": 10,
+      "title": "Business Problem",
+      "type": "string"
+    },
+    "target_user": {
+      "minLength": 2,
+      "title": "Target User",
+      "type": "string"
+    },
+    "desired_outcome": {
+      "minLength": 5,
+      "title": "Desired Outcome",
+      "type": "string"
+    },
+    "current_process": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Current Process",
+      "type": "array"
+    },
+    "trigger": {
+      "default": "由用户显式调用",
+      "title": "Trigger",
+      "type": "string"
+    },
+    "inputs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Inputs",
+      "type": "array"
+    },
+    "outputs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Outputs",
+      "type": "array"
+    },
+    "tools_available": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tools Available",
+      "type": "array"
+    },
+    "knowledge_sources": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Knowledge Sources",
+      "type": "array"
+    },
+    "permissions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Permissions",
+      "type": "array"
+    },
+    "risk_level": {
+      "$ref": "#/$defs/RiskLevel",
+      "default": "medium"
+    },
+    "latency_requirement": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latency Requirement"
+    },
+    "quality_requirement": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Quality Requirement"
+    },
+    "human_approval_points": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Human Approval Points",
+      "type": "array"
+    },
+    "deployment_environment": {
+      "default": "platform-agnostic",
+      "title": "Deployment Environment",
+      "type": "string"
+    },
+    "examples": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Examples",
+      "type": "array"
+    },
+    "non_goals": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Non Goals",
+      "type": "array"
+    },
+    "owner": {
+      "default": "UNASSIGNED",
+      "title": "Owner",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "business_problem",
+    "target_user",
+    "desired_outcome"
+  ],
+  "title": "SkillRequest",
+  "type": "object"
+}

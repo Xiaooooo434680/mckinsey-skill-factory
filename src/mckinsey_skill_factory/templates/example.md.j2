@@ -1,0 +1,21 @@
+# {% if mode == 'happy' %}Happy Path{% elif mode == 'edge' %}Edge Case{% else %}Failure Case{% endif %}
+
+## Input
+
+{% if mode == 'happy' %}
+提供完整输入、可用证据和正常工具响应。
+{% elif mode == 'edge' %}
+输入不完整或证据存在冲突。
+{% else %}
+核心工具失败、权限不足或请求超出范围。
+{% endif %}
+
+## Expected Behavior
+
+{% if mode == 'happy' %}
+返回 `success`，结论有证据支撑，并给出优先级明确的下一步。
+{% elif mode == 'edge' %}
+返回 `partial`，显式列出假设、冲突和缺失证据，降低置信度。
+{% else %}
+返回 `blocked` 或安全降级；不得虚构数据，不得越权执行。
+{% endif %}

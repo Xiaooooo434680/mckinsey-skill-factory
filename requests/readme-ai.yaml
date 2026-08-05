@@ -1,0 +1,52 @@
+name: readme-ai
+business_problem: 手工编写和维护项目 README 耗时且质量参差，许多仓库缺乏完整、一致、专业的文档；需要一个能根据代码仓库自动生成结构化 README 的方法，覆盖项目介绍、功能、目录结构、快速开始、使用测试、社区贡献等全部章节。
+target_user: 开发者与项目维护者
+desired_outcome: 输入仓库（本地目录或 GitHub/GitLab/Bitbucket URL）后，自动产出一份结构完整、语言精确、遵循 markdown 最佳实践、风格可配置的 README 文档，减少人工编写成本并保证文档一致性。
+current_process:
+  - 维护者手工编写 README，经常遗漏章节或长期不更新
+  - 没有统一的文档模板与风格，项目间差异大
+trigger: 用户请求为某个代码仓库生成或重写 README 文档
+inputs:
+  - repository_path_or_url (本地目录路径或 GitHub/GitLab/Bitbucket URL)
+  - output_path (输出文件路径，默认 README.md)
+  - doc_language (文档语言，默认与仓库注释语言一致)
+  - header_style (header 模板风格：classic/modern/compact/console/banner/ascii)
+  - navigation_style (目录导航风格：bullet/fold/accordion/roman/number)
+  - badge_style (徽章样式：flat/flat-square/for-the-badge/plastic/skills-light)
+  - badge_color (徽章颜色：颜色名或十六进制，默认 0080ff)
+  - align (header 文字对齐：center/left)
+  - emojis (章节标题表情主题：solar/water/rainbow 等)
+  - logo (项目 logo：blue/grey/black/purple/ice/cloud/llm/custom)
+  - tree_max_depth (目录树最大深度，默认 2)
+outputs:
+  - readme.md (结构化 README 文档，含项目介绍、功能表、目录树、项目索引、依赖与快速开始、安装/使用/测试、社区与支持、贡献指南、License)
+  - generation_report (生成报告：来源仓库、应用选项、生成章节清单、置信度与未验证假设)
+tools_available:
+  - filesystem_scan (递归扫描本地目录，配合 .readmeaiignore 过滤噪声文件)
+  - git_clone_or_fetch (拉取或读取远程仓库文件)
+  - package_manifest_parsers (解析 pyproject.toml/package.json/Cargo.toml/requirements.txt 等提取依赖与元数据)
+  - tree_generator (以代码块形式生成项目目录树)
+  - badge_builder (依据徽章样式与颜色生成 shields.io 风格徽章)
+  - markdown_writer (按模板分节生成并拼接 README)
+  - llm (宿主 Agent 的 LLM 能力，用于生成自然语言章节)
+knowledge_sources:
+  - markdown_best_practices (结构、表格、链接、代码块规范)
+  - shields_io_badges (徽章样式与配色)
+  - readme_section_template (readme-ai 的标准章节模板)
+  - repository_code_and_metadata (仓库自身源码、配置文件、git 元数据)
+permissions:
+  - read (扫描仓库文件)
+  - write (输出 markdown 文件)
+risk_level: low
+latency_requirement: 生成单仓库 README 可在分钟级完成，无实时性要求
+quality_requirement: README 结构完整无缺节、链接有效、目录树与实际一致、依赖清单准确、无虚构事实
+human_approval_points:
+  - 覆盖仓库中已存在的 README.md
+  - 将生成结果 push 到远程仓库或提交 PR
+  - 输出写入仓库目录之外的路径
+non_goals:
+  - 不修改或重构源代码
+  - 不自动 commit / push 或提交 PR
+  - 不生成 README 之外的文档（如 API 参考、CHANGELOG、架构图）
+  - 不执行依赖安装或构建命令
+owner: user

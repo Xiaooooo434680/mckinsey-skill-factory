@@ -1,0 +1,34 @@
+name: sales-opportunity-diagnosis
+business_problem: 诊断销售机会是否值得继续投入，并识别阻塞成交的关键因素
+target_user: 销售经理
+desired_outcome: 提高销售资源配置效率和高价值商机成交率
+current_process:
+  - 销售人员手工更新 CRM
+  - 销售经理在周会上逐条判断
+trigger: 销售经理请求评估某个商机
+inputs:
+  - crm_opportunity
+  - activity_history
+  - stakeholder_map
+  - product_fit_notes
+outputs:
+  - opportunity_score
+  - key_blockers
+  - evidence
+  - recommended_next_actions
+tools_available:
+  - crm_read_api
+  - activity_history_api
+knowledge_sources:
+  - sales_methodology
+  - product_catalog
+permissions:
+  - read-only
+risk_level: medium
+human_approval_points:
+  - 关闭商机
+  - 修改预测金额
+non_goals:
+  - 自动关闭商机
+  - 代替销售经理作出最终资源分配决策
+owner: revenue-operations

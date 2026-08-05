@@ -1,0 +1,29 @@
+# {{ spec.name }}
+
+{{ spec.purpose }}
+
+## 使用者
+
+{{ spec.target_user }}
+
+## 当前成熟度
+
+`{{ spec.readiness.value }}`
+
+## 输入
+
+{% for item in spec.inputs %}
+- {{ item }}
+{% endfor %}
+
+## 输出
+
+{% for item in spec.outputs %}
+- {{ item }}
+{% endfor %}
+
+## 上线前未完成项
+
+{% if not spec.release_gate.owner_assigned %}- 指定业务 Owner{% endif %}
+{% if not spec.release_gate.safety_review_passed %}- 完成安全评审{% endif %}
+{% if not spec.release_gate.eval_threshold_met %}- 使用真实数据完成评估并达到阈值{% endif %}

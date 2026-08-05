@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -e '.[dev]'
+      - run: ruff check src tests
+      - run: mypy src
+      - run: pytest -q
+      - run: skill-factory build examples/sales-opportunity/request.yaml --output dist/base
+      - run: skill-factory validate dist/base/sales-opportunity-diagnosis
+      - run: skill-factory modify dist/base/sales-opportunity-diagnosis examples/evolution/change-request.yaml --output dist/evolved
+      - run: skill-factory test dist/evolved/sales-opportunity-diagnosis-0.1.1 --baseline dist/base/sales-opportunity-diagnosis --change-request examples/evolution/change-request.yaml

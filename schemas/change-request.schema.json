@@ -1,0 +1,161 @@
+{
+  "$defs": {
+    "ChangeAction": {
+      "enum": [
+        "add",
+        "update",
+        "remove",
+        "replace"
+      ],
+      "title": "ChangeAction",
+      "type": "string"
+    },
+    "ChangeComponent": {
+      "enum": [
+        "metadata",
+        "workflow",
+        "tools",
+        "guardrails",
+        "output_contract",
+        "evaluation",
+        "file"
+      ],
+      "title": "ChangeComponent",
+      "type": "string"
+    },
+    "ChangeOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "component": {
+          "$ref": "#/$defs/ChangeComponent"
+        },
+        "action": {
+          "$ref": "#/$defs/ChangeAction"
+        },
+        "selector": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selector"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        },
+        "expected_old": {
+          "default": null,
+          "title": "Expected Old"
+        },
+        "rationale": {
+          "minLength": 3,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "component",
+        "action",
+        "rationale"
+      ],
+      "title": "ChangeOperation",
+      "type": "object"
+    },
+    "EvolutionType": {
+      "enum": [
+        "corrective",
+        "adaptive",
+        "perfective",
+        "evolutionary"
+      ],
+      "title": "EvolutionType",
+      "type": "string"
+    },
+    "VersionBump": {
+      "enum": [
+        "auto",
+        "patch",
+        "minor",
+        "major"
+      ],
+      "title": "VersionBump",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "skill_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Skill Name"
+    },
+    "reason": {
+      "minLength": 10,
+      "title": "Reason",
+      "type": "string"
+    },
+    "evolution_type": {
+      "$ref": "#/$defs/EvolutionType"
+    },
+    "requested_by": {
+      "minLength": 2,
+      "title": "Requested By",
+      "type": "string"
+    },
+    "version_bump": {
+      "$ref": "#/$defs/VersionBump",
+      "default": "auto"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/ChangeOperation"
+      },
+      "minItems": 1,
+      "title": "Operations",
+      "type": "array"
+    },
+    "acceptance_criteria": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Acceptance Criteria",
+      "type": "array"
+    },
+    "rollback_strategy": {
+      "default": "恢复演进前的完整 Skill Package",
+      "title": "Rollback Strategy",
+      "type": "string"
+    },
+    "owner_approval": {
+      "default": false,
+      "title": "Owner Approval",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "reason",
+    "evolution_type",
+    "requested_by",
+    "operations"
+  ],
+  "title": "ChangeRequest",
+  "type": "object"
+}
