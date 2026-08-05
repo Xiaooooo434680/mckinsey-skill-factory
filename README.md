@@ -85,9 +85,10 @@ mckinsey-skill-factory/
 - Python ≥ 3.10
 - 依赖：`pydantic >=2.7,<3` · `PyYAML >=6,<7` · `Jinja2 >=3.1,<4` · `typer >=0.12,<1`
 
-**安装**
+**安装（多种方式）**
 
 ```bash
+# 方式一：从源码 + pip（推荐）
 git clone https://github.com/Xiaooooo434680/mckinsey-skill-factory.git
 cd mckinsey-skill-factory
 python -m venv .venv
@@ -95,11 +96,31 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -e '.[dev]'
 ```
 
+```bash
+# 方式二：uv（更快）
+uv pip install -e '.[dev]'
+
+# 方式三：Makefile
+make install
+```
+
 验证安装：
 
 ```bash
 skill-factory --help
 ```
+
+**作为 Skill 安装到不同 Agent**
+
+`skill-factory build` 产出的 skill 包（含 `SKILL.md`）是自包含目录，可安装到各 AI Agent：
+
+| Agent | 全局（跨项目） | 项目级（随仓库共享） |
+| --- | --- | --- |
+| Claude Code | `~/.claude/skills/<skill>/` | `.claude/skills/<skill>/` |
+| Codex / Cursor / OpenCode | `~/.agents/skills/<skill>/` | `.agents/skills/<skill>/` |
+| Gemini CLI | `~/.gemini/skills/<skill>/` | `.gemini/skills/<skill>/` |
+
+> `.agents/skills/` 是跨 Agent 通用目录：Codex、Gemini CLI、Cursor v2.4+、OpenCode 均原生读取。
 
 ## 📖 使用
 
